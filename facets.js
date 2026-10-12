@@ -7,7 +7,8 @@
 //   data-cell     mesh cell size in CSS pixels
 //   data-shade    how strongly the light varies facet brightness (0 to 1)
 //   data-seed     fixed seed, so shapes stay the same across reloads and resizes
-//   data-ridge    cut a mountain line across the top
+//   data-ridge    cut a mountain line across the top. It spans the full height,
+//                 or only the depth given by an inherited --ridge length
 //   data-animate  slowly swing the light (skipped for reduced motion)
 (function () {
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -70,14 +71,22 @@
     return triangles;
   }
 
-  function buildRidge(width, height, cell, random) {
+  // Peaks and valleys alternate at uneven spacing under a slow swell, so the line
+  // reads as ranges and passes rather than a row of evenly spaced teeth.
+  function buildRidge(width, depth, cell, random) {
     var points = [];
-    var step = cell * 1.6;
-    for (var i = 0, x = 0; x <= width + step; i++, x += step) {
+    var phase = random() * Math.PI * 2;
+    for (var i = 0, x = 0; x < width; i++) {
+      var swell = 0.5 + 0.5 * Math.sin(phase + (x / width) * Math.PI * 2.4);
       var peak = i % 2 === 1;
-      var y = height * (peak ? 0.06 + random() * 0.28 : 0.38 + random() * 0.3);
-      points.push({ x: x + (random() - 0.5) * step * 0.4, y: y });
+      var y = peak
+        ? depth * (0.04 + (1 - swell) * 0.34 + random() * 0.14)
+        : depth * (0.4 + (1 - swell) * 0.12 + random() * 0.2);
+      points.push({ x: x, y: y });
+      x += cell * (0.7 + random() * 1.5);
     }
+    // Pin the line to the right edge so the clip never leaves a sliver there.
+    points.push({ x: width, y: depth * (0.4 + random() * 0.2) });
     return points;
   }
 
@@ -136,6 +145,16 @@
     }
   }
 
+  // Measures --ridge with a probe, so any CSS length (clamp, vw) resolves to pixels.
+  function ridgeDepth(canvas, height) {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;height:var(--ridge, 0px)';
+    canvas.parentNode.appendChild(probe);
+    var depth = probe.offsetHeight;
+    probe.remove();
+    return depth > 0 ? Math.min(depth, height) : height;
+  }
+
   function resolveStops(canvas) {
     var styles = getComputedStyle(canvas);
     return canvas.dataset.stops.split(/\s+/).map(function (token) {
@@ -169,7 +188,9 @@
 
       var random = seededRandom(state.seed);
       state.triangles = buildMesh(state.width, state.height, state.cell, random);
-      state.ridge = 'ridge' in canvas.dataset ? buildRidge(state.width, state.height, state.cell, random) : null;
+      state.ridge = 'ridge' in canvas.dataset
+        ? buildRidge(state.width, ridgeDepth(canvas, state.height), state.cell, random)
+        : null;
       paint(state, state.time);
     }
 

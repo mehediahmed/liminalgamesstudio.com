@@ -13,150 +13,129 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* Home page layout: left-aligned editorial grid with a label rail beside each
-     section. A low-poly mountain range runs edge to edge under the hero, and each
-     game gets a faceted panel in its own palette. Everything else stays quiet. */
+  /* Home page. The studio statement sits in open sky, then each game is a
+     full-bleed low-poly world: Poly Blockade's daylight hills rise under the
+     hero, and the night ridge of Leave No Witnesses cuts into them below.
+     Everything around the two worlds stays quiet. */
 
   /* Hero */
-  .hero { padding-block: clamp(3.5rem, 10vw, 7rem) clamp(1.5rem, 4vw, 2.5rem); }
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0 0 1.75rem;
-    color: var(--muted);
-  }
-  .eyebrow a { text-decoration-color: var(--line); text-underline-offset: 0.25em; }
-  .eyebrow a:hover { color: var(--fg); text-decoration-color: currentColor; }
-  h1 {
+  .hero { padding-block: clamp(2.5rem, 8vw, 6rem) clamp(0.5rem, 2vw, 1.5rem); }
+  .hero h1 {
+    max-width: 11em;
     margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(2.75rem, 9vw, 7rem);
-    font-stretch: 125%;
+    font-size: clamp(2.5rem, 7.2vw, 6rem);
+    font-stretch: 112%;
     font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
     text-wrap: balance;
   }
-  h1 span { display: block; }
-  h1 .soft { color: var(--muted); }
   .lead {
-    max-width: 38rem;
-    margin: 2.25rem 0 0;
-    font-size: clamp(1.125rem, 2vw, 1.3rem);
+    max-width: 34rem;
+    margin: 1.75rem 0 0;
+    font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
     line-height: 1.5;
   }
-  .horizon { height: clamp(170px, 26vw, 340px); }
 
-  /* Sections */
-  .section {
-    display: grid;
-    grid-template-columns: 12rem minmax(0, 1fr);
-    gap: 2rem;
-    padding-block: clamp(3rem, 7vw, 5.5rem);
-    border-top: 1px solid var(--line);
+  /* Game worlds. --ridge is the depth of the mountain line along each world's
+     top edge; facets.js reads it so the painted ridge and the padding agree. */
+  .world {
+    --ridge: clamp(110px, 17vw, 240px);
+    position: relative;
+    color: var(--world-fg);
+    /* Solid ground below the ridge line in case the canvas never paints */
+    background: linear-gradient(transparent var(--ridge), var(--world-base) var(--ridge));
   }
-  .after-horizon > .section:first-child { border-top: 0; }
-  .section > h2 {
+  .world > .facets { position: absolute; inset: 0; }
+  .world-inner {
+    position: relative;
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding: calc(var(--ridge) + clamp(1.5rem, 4vw, 3rem)) var(--gutter) clamp(3.5rem, 8vw, 6rem);
+  }
+  .world--pb {
+    --world-base: var(--pb-a);
+    --world-fg: var(--pb-fg);
+    --world-muted: var(--pb-muted);
+    --world-line: var(--pb-line);
+    --status-dot: var(--pb-fg);
+  }
+  /* Leaves room at the bottom for the night ridge that overlaps it */
+  .world--pb .world-inner { padding-bottom: calc(var(--ridge) + clamp(2.5rem, 6vw, 4.5rem)); }
+  .world--lnw {
+    --world-base: var(--lnw-a);
+    --world-fg: var(--lnw-fg);
+    --world-muted: var(--lnw-muted);
+    --world-line: var(--lnw-line);
+    --status-dot: var(--amber);
+    margin-top: calc(-1 * var(--ridge));
+  }
+
+  .status {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    align-self: start;
-    margin: 0;
-    padding-top: 0.3rem;
-    color: var(--muted);
-  }
-  .section--games { --marker: var(--coral); }
-  .section--studio { --marker: var(--teal); }
-  .section--contact { --marker: var(--amber); }
-  .section-body { min-width: 0; }
-  .prose { max-width: 38rem; }
-  .prose p { margin: 0 0 1.25rem; }
-  .prose p:last-child { margin-bottom: 0; }
-
-  /* Game panels share one structure; each variant supplies its own palette */
-  .games { display: grid; gap: 1.25rem; }
-  .game {
-    position: relative;
-    overflow: hidden;
-    border-radius: 6px;
-    background: var(--panel-base);
-    color: var(--panel-fg);
-  }
-  .game > .facets { position: absolute; inset: 0; }
-  .game-inner {
-    position: relative;
-    display: grid;
-    gap: 2.25rem;
-    padding: clamp(1.5rem, 4vw, 3rem);
-  }
-  .game--lnw {
-    --panel-base: var(--lnw-a);
-    --panel-fg: var(--lnw-fg);
-    --panel-muted: var(--lnw-muted);
-    --panel-line: var(--lnw-line);
-    --status-dot: var(--amber);
-  }
-  .game--pb {
-    --panel-base: var(--pb-a);
-    --panel-fg: var(--pb-fg);
-    --panel-muted: var(--pb-muted);
-    --panel-line: var(--pb-line);
-    --status-dot: var(--on-color);
-  }
-  .game-meta {
-    display: flex;
-    flex-wrap: wrap;
     gap: 0.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    margin: 0 0 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
   }
-  .game-meta li {
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--panel-line);
-    border-radius: 2px;
-    color: var(--panel-muted);
-    font-size: 0.75rem;
-  }
-  .game-meta .status { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--panel-fg); }
-  .game-meta .status::before {
+  .status::before {
     content: "";
-    width: 6px;
-    height: 6px;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
     background: var(--status-dot);
   }
-  .game h3 {
+
+  /* Each title takes one end of Archivo's width axis */
+  .world h3 {
     margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5.5vw, 3.75rem);
-    font-stretch: 125%;
     font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.01em;
+    line-height: 0.86;
     text-transform: uppercase;
-    text-wrap: balance;
   }
-  .game-pitch { max-width: 40rem; margin: 1.25rem 0 0; font-size: 1.125rem; }
-  .game-foot {
+  .world h3 span { display: block; }
+  .world--pb h3 {
+    font-size: clamp(3rem, 12.5vw, 9.5rem);
+    font-stretch: 125%;
+    letter-spacing: -0.02em;
+  }
+  .world--lnw h3 {
+    font-size: clamp(4.5rem, 13vw, 9.5rem);
+    font-stretch: 62%;
+  }
+  .pitch {
+    max-width: 34rem;
+    margin: 1.75rem 0 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.5;
+  }
+  .world-foot {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    margin: 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--panel-line);
-    color: var(--panel-muted);
+    margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+    color: var(--world-muted);
     font-size: 0.9375rem;
   }
-  .game-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
-  .game-links a { color: var(--panel-fg); text-underline-offset: 0.2em; }
+  .world-foot p { margin: 0; }
+  .world-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+  .world-links a { color: var(--world-fg); font-weight: 600; text-underline-offset: 0.2em; }
 
-  .meter { margin: 0; }
+  /* Leave No Witnesses: the condensed title stands beside the pitch and meter */
+  .lnw-intro {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .lnw-intro .pitch { margin-top: 0; }
+
+  .meter { margin: 2.25rem 0 0; max-width: 34rem; }
   .meter-steps {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -166,10 +145,12 @@
     list-style: none;
   }
   .meter-steps li {
-    padding-top: 0.75rem;
-    border-top: 3px solid var(--panel-line);
-    color: var(--panel-muted);
-    font-size: 0.75rem;
+    padding-top: 0.625rem;
+    border-top: 4px solid var(--world-line);
+    color: var(--world-muted);
+    font-size: 0.875rem;
+    font-stretch: 87.5%;
+    font-weight: 600;
     overflow-wrap: anywhere;
     transition: color 0.3s ease, border-color 0.3s ease;
   }
@@ -177,39 +158,54 @@
   .meter-steps li:nth-child(2) { --state: var(--state-suspicious); }
   .meter-steps li:nth-child(3) { --state: var(--state-alert); }
   .meter-steps li:nth-child(4) { --state: var(--state-combat); }
-  .meter-steps li.is-on { border-top-color: var(--state); color: var(--panel-fg); }
-  .meter figcaption { margin-top: 0.75rem; color: var(--panel-muted); font-size: 0.9375rem; }
+  .meter-steps li.is-on { border-top-color: var(--state); color: var(--world-fg); }
+  .meter figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
 
   .pillars {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 1.75rem 2rem;
-    margin: 0;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.75rem 2.5rem;
+    margin: clamp(3rem, 6vw, 4.5rem) 0 0;
     padding: 0;
     list-style: none;
   }
-  .pillars li { padding-top: 1rem; border-top: 1px solid var(--panel-line); }
-  .pillars h4 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 500; }
-  .pillars p { margin: 0; color: var(--panel-muted); font-size: 0.9375rem; }
+  .pillars li { padding-top: 1rem; border-top: 1px solid var(--world-line); }
+  .pillars h4 {
+    margin: 0 0 0.375rem;
+    font-size: 1.375rem;
+    font-stretch: 62%;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .pillars p { margin: 0; color: var(--world-muted); font-size: 0.9375rem; line-height: 1.55; }
 
   /* Contact */
-  .contact-intro { margin: 0 0 1rem; color: var(--muted); }
+  .contact { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
+  .contact h2 {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-stretch: 112%;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .contact-intro { margin: 0.5rem 0 1.75rem; color: var(--muted); }
   .contact-address {
     display: block;
     margin: 0 0 1.75rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 3.6vw, 2.25rem);
+    /* Scales with the viewport so the address stays on one line on phones */
+    font-size: clamp(1.125rem, 5vw, 3.25rem);
     font-stretch: 112%;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
     overflow-wrap: anywhere;
   }
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
   .copy-status { color: var(--muted); font-size: 0.9375rem; }
 
   @media (max-width: 720px) {
-    .section { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
-    .meter-steps li { font-size: 0.6875rem; letter-spacing: 0.04em; }
+    .lnw-intro { grid-template-columns: minmax(0, 1fr); }
   }
   @media (prefers-reduced-motion: reduce) {
     .meter-steps li { transition: none; }
@@ -230,9 +226,8 @@
       Liminal Games Studio
     </a>
     <nav class="site-nav" aria-label="Sections">
-      <ul class="label">
+      <ul>
         <li><a href="#games">Games</a></li>
-        <li><a href="#studio">Studio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -242,58 +237,40 @@
 <main id="top">
   <div class="wrap">
     <section class="hero">
-      <p class="eyebrow label facet-marker"><a href="#games">Poly Blockade is coming soon</a></p>
-      <h1><span>Liminal</span> <span class="soft">Games Studio</span></h1>
-      <p class="lead">We're an independent studio making low-poly games. Poly Blockade, a tower defense game for mobile, is coming soon. Leave No Witnesses, a stealth-action game for PC, is in development.</p>
+      <h1>Low-poly games about planning.</h1>
+      <p class="lead">Liminal Games Studio is an independent game developer. In our games you read the situation, commit to a plan, and deal with how it plays out.</p>
     </section>
   </div>
 
-  <div class="horizon full-bleed" aria-hidden="true">
-    <canvas class="facets" data-stops="--teal --blue --coral --amber" data-cell="58" data-shade="0.38" data-seed="7" data-ridge data-animate></canvas>
-  </div>
+  <section class="full-bleed" id="games" aria-labelledby="games-title">
+    <h2 class="visually-hidden" id="games-title">Games</h2>
 
-  <div class="wrap after-horizon">
-    <section class="section section--games" id="games" aria-labelledby="games-label">
-      <h2 class="label facet-marker" id="games-label">Games</h2>
-      <div class="section-body games">
+    <article class="world world--pb" aria-labelledby="pb-title">
+      <canvas class="facets" aria-hidden="true" data-stops="--pb-a --pb-b --pb-c" data-cell="64" data-shade="0.22" data-seed="12" data-ridge data-animate></canvas>
+      <div class="world-inner">
+        <p class="status">Coming soon</p>
+        <h3 id="pb-title"><span>Poly</span> <span>Blockade</span></h3>
+        <p class="pitch">A low-poly tower defense game for iPhone, iPad and Android.</p>
+        <div class="world-foot">
+          <p>Store links will be posted here at launch.</p>
+          <p class="world-links">
+            <a href="poly-blockade/support.html">Support</a>
+            <a href="poly-blockade/privacy.html">Privacy policy</a>
+          </p>
+        </div>
+      </div>
+    </article>
 
-        <article class="game game--pb">
-          <canvas class="facets" aria-hidden="true" data-stops="--pb-a --pb-b --pb-c" data-cell="64" data-shade="0.16" data-seed="12"></canvas>
-          <div class="game-inner">
-            <ul class="game-meta label" aria-label="Game details">
-              <li class="status">Coming soon</li>
-              <li>Tower defense</li>
-              <li>iOS and Android</li>
-            </ul>
-            <div>
-              <h3>Poly Blockade</h3>
-              <p class="game-pitch">A low-poly tower defense game for iPhone, iPad and Android.</p>
-            </div>
-            <div class="game-foot">
-              <span>Store links will be posted here at launch.</span>
-              <span class="game-links">
-                <a href="poly-blockade/support.html">Support</a>
-                <a href="poly-blockade/privacy.html">Privacy policy</a>
-              </span>
-            </div>
-          </div>
-        </article>
-
-        <article class="game game--lnw">
-          <canvas class="facets" aria-hidden="true" data-stops="--lnw-a --lnw-b --lnw-c" data-cell="72" data-shade="0.22" data-seed="31"></canvas>
-          <div class="game-inner">
-            <ul class="game-meta label" aria-label="Game details">
-              <li class="status">In development</li>
-              <li>First-person stealth action</li>
-              <li>PC</li>
-            </ul>
-            <div>
-              <h3>Leave No Witnesses</h3>
-              <p class="game-pitch">Get in, find your target and get out. Guards hunt you by sight and sound, civilians run for help, and anything you leave behind can give you away.</p>
-            </div>
-
+    <article class="world world--lnw" aria-labelledby="lnw-title">
+      <canvas class="facets" aria-hidden="true" data-stops="--lnw-a --lnw-b --lnw-c" data-cell="72" data-shade="0.22" data-seed="31" data-ridge></canvas>
+      <div class="world-inner">
+        <p class="status">In development</p>
+        <div class="lnw-intro">
+          <h3 id="lnw-title"><span>Leave</span> <span>No</span> <span>Witnesses</span></h3>
+          <div>
+            <p class="pitch">A first-person stealth-action game for PC. Get in, find your target and get out. Guards hunt you by sight and sound, civilians run for help, and anything you leave behind can give you away.</p>
             <figure class="meter">
-              <ol class="meter-steps label">
+              <ol class="meter-steps">
                 <li>Unaware</li>
                 <li>Suspicious</li>
                 <li>Alert</li>
@@ -301,61 +278,54 @@
               </ol>
               <figcaption>Every guard climbs these four steps before opening fire, and the HUD shows you where each one stands.</figcaption>
             </figure>
-
-            <ul class="pillars">
-              <li>
-                <h4>Light and sound decide</h4>
-                <p>Pools of darkness hide you. Footsteps carry. Crouch behind the bar and the guard walks past.</p>
-              </li>
-              <li>
-                <h4>You see it coming</h4>
-                <p>Losing stealth is never a surprise. An edge-of-screen indicator fills toward whoever is noticing you.</p>
-              </li>
-              <li>
-                <h4>Consequences stay</h4>
-                <p>A wounded guard bleeds and screams. Blood trails get followed, and bodies left in the open get found.</p>
-              </li>
-            </ul>
-
-            <div class="game-foot">
-              <span>Steam page coming soon.</span>
-            </div>
           </div>
-        </article>
+        </div>
 
-      </div>
-    </section>
+        <ul class="pillars">
+          <li>
+            <h4>Light and sound decide</h4>
+            <p>Pools of darkness hide you. Footsteps carry. Crouch behind the bar and the guard walks past.</p>
+          </li>
+          <li>
+            <h4>You see it coming</h4>
+            <p>Losing stealth is never a surprise. An edge-of-screen indicator fills toward whoever is noticing you.</p>
+          </li>
+          <li>
+            <h4>Consequences stay</h4>
+            <p>A wounded guard bleeds and screams. Blood trails get followed, and bodies left in the open get found.</p>
+          </li>
+        </ul>
 
-    <section class="section section--studio" id="studio" aria-labelledby="studio-label">
-      <h2 class="label facet-marker" id="studio-label">Studio</h2>
-      <div class="section-body prose">
-        <p>Liminal Games Studio is an independent game developer. Our tower defense game Poly Blockade is coming soon to iOS and Android, and Leave No Witnesses, a first-person stealth-action game for PC, is in development.</p>
-        <p>Both share a low-poly art style, and both are games about planning. You read the situation, commit to a plan, and deal with how it plays out.</p>
-      </div>
-    </section>
-
-    <section class="section section--contact" id="contact" aria-labelledby="contact-label">
-      <h2 class="label facet-marker" id="contact-label">Contact</h2>
-      <div class="section-body">
-        <p class="contact-intro">Press, publishing, business, or anything else.</p>
-        <span class="contact-address" id="email-address" data-user="contact" data-domain="liminalgamesstudio.com">contact at liminalgamesstudio.com</span>
-        <div class="actions">
-          <a class="btn btn--solid label" id="email-link" href="#contact">Email us</a>
-          <button class="btn label" id="copy-email" type="button">Copy address</button>
-          <span class="copy-status" id="copy-status" aria-live="polite"></span>
+        <div class="world-foot">
+          <p>Steam page coming soon.</p>
         </div>
       </div>
-    </section>
+    </article>
+  </section>
 
-    <footer class="site-footer label">
-      <span>&copy; 2026 Liminal Games Studio</span>
-      <nav aria-label="Poly Blockade">
-        <a href="poly-blockade/support.html">Poly Blockade support</a>
-        <a href="poly-blockade/privacy.html">Poly Blockade privacy</a>
-      </nav>
-    </footer>
+  <div class="wrap">
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact</h2>
+      <p class="contact-intro">Press, publishing, business, or anything else.</p>
+      <span class="contact-address" id="email-address" data-user="contact" data-domain="liminalgamesstudio.com">contact at liminalgamesstudio.com</span>
+      <div class="actions">
+        <a class="btn btn--solid" id="email-link" href="#contact">Email us</a>
+        <button class="btn" id="copy-email" type="button">Copy address</button>
+        <span class="copy-status" id="copy-status" aria-live="polite"></span>
+      </div>
+    </section>
   </div>
 </main>
+
+<div class="wrap">
+  <footer class="site-footer">
+    <span>&copy; 2026 Liminal Games Studio</span>
+    <nav aria-label="Poly Blockade">
+      <a href="poly-blockade/support.html">Poly Blockade support</a>
+      <a href="poly-blockade/privacy.html">Poly Blockade privacy</a>
+    </nav>
+  </footer>
+</div>
 
 <script src="facets.js"></script>
 <script>
@@ -385,7 +355,7 @@
         return;
       }
       navigator.clipboard.writeText(address).then(function () {
-        copyStatus.textContent = 'Copied.';
+        copyStatus.textContent = 'Address copied.';
       }, selectAddress);
     });
 

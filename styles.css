@@ -1,24 +1,28 @@
 /* Liminal Games Studio, shared styles.
    Tokens first, then the parts every page uses: header, footer, buttons and the
    long-form document layout used by the Poly Blockade privacy and support pages.
-   Page-specific styles stay inline in each page. */
+   Page-specific styles stay inline in each page.
+
+   Type is one family, Archivo, and its width axis carries the identity: the
+   studio speaks at 112%, Poly Blockade at its widest (125%) and Leave No
+   Witnesses at its narrowest (62%). */
 
 :root {
   --gutter: clamp(16px, 4vw, 48px);
+  --measure: 72rem;
 
   --bg: #f5f6fb;
   --fg: #1a1d3a;
   --muted: #5a5f80;
   --line: #d6d9ea;
 
-  /* Studio palette, used by the horizon, the mark and the controls */
+  /* Studio palette, used by the mark, focus rings and the awareness meter */
   --coral: #ff5e5b;
   --amber: #ffb627;
   --teal: #0fa3a3;
   --blue: #3d6bff;
-  --on-color: #14172f;
 
-  /* Leave No Witnesses panel: a faceted night sky */
+  /* Leave No Witnesses: a faceted night sky */
   --lnw-a: #171a36;
   --lnw-b: #1f1d42;
   --lnw-c: #3a1f40;
@@ -43,9 +47,7 @@
   --todo-bg: #ffe08a;
   --todo-fg: #14172f;
 
-  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -78,30 +80,21 @@ body {
   padding-inline: var(--gutter);
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-body);
+  font-family: var(--font);
   font-size: 1.0625rem;
   line-height: 1.6;
 }
-.wrap { max-width: 72rem; margin-inline: auto; }
+.wrap { max-width: var(--measure); margin-inline: auto; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 
-.label {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* A small flat-shaded triangle, the site's one recurring marker */
-.facet-marker::before {
-  content: "";
-  flex: none;
-  width: 0.75em;
-  height: 0.65em;
-  background: var(--marker, var(--coral));
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* Cancels the body gutter so a band runs edge to edge */
@@ -115,8 +108,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-  padding-block: 1.5rem;
-  border-bottom: 1px solid var(--line);
+  padding-block: 1.25rem;
 }
 .brand {
   display: inline-flex;
@@ -124,10 +116,9 @@ a { color: inherit; }
   gap: 0.625rem;
   color: var(--fg);
   text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-stretch: 112%;
-  font-weight: 600;
+  font-weight: 650;
 }
 .mark { width: 30px; height: 30px; flex: none; }
 .mark .facet-a { fill: var(--teal); }
@@ -141,24 +132,34 @@ a { color: inherit; }
   padding: 0;
   list-style: none;
 }
-.site-nav a { color: var(--muted); text-decoration: none; }
+.site-nav a {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+}
 .site-nav a:hover { color: var(--fg); }
 
 /* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.75rem 1.1rem;
-  border: 1px solid var(--fg);
-  border-radius: 2px;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid var(--fg);
+  border-radius: 3px;
   background: transparent;
   color: var(--fg);
   cursor: pointer;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-stretch: 112%;
+  font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 .btn:hover { background: var(--fg); color: var(--bg); }
-.btn--solid { background: var(--coral); border-color: var(--coral); color: var(--on-color); }
+.btn--solid { background: var(--fg); color: var(--bg); }
 .btn--solid:hover { background: transparent; color: var(--fg); }
 
 /* Footer */
@@ -167,53 +168,44 @@ a { color: inherit; }
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.75rem 2rem;
-  padding-block: 2rem 2.5rem;
+  padding-block: 1.75rem 2.5rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
 .site-footer a { text-decoration: none; }
-.site-footer a:hover { color: var(--fg); }
+.site-footer a:hover, .site-footer a[aria-current] { color: var(--fg); }
 
 /* Long-form documents (privacy policy, support) */
-.doc-hero { padding-block: clamp(3rem, 8vw, 5rem) clamp(1.25rem, 3vw, 2rem); }
-.doc-hero .eyebrow {
-  --marker: var(--pb-a);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0 0 1.25rem;
-  color: var(--muted);
-}
+.doc-hero { padding-block: clamp(2.5rem, 7vw, 4.5rem) clamp(1.25rem, 3vw, 2rem); }
 .doc-hero h1 {
   margin: 0;
-  font-family: var(--font-display);
   font-size: clamp(2.25rem, 6vw, 4rem);
-  font-stretch: 125%;
+  font-stretch: 112%;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 .doc-hero .doc-meta { margin: 1.25rem 0 0; color: var(--muted); }
 .doc-band { height: clamp(70px, 10vw, 120px); }
 
 .doc {
-  max-width: 44rem;
+  max-width: 42rem;
   padding-block: clamp(2.5rem, 6vw, 4rem);
 }
 .doc h2 {
   margin: 2.75rem 0 0.75rem;
-  font-family: var(--font-display);
   font-size: 1.5rem;
   font-stretch: 112%;
   font-weight: 700;
   line-height: 1.25;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 .doc h2:first-child { margin-top: 0; }
-.doc h3 { margin: 1.75rem 0 0.4rem; font-size: 1.0625rem; font-weight: 500; }
+.doc h3 { margin: 1.75rem 0 0.4rem; font-size: 1.0625rem; font-weight: 650; }
 .doc p, .doc ul { margin: 0 0 1rem; }
 .doc ul { padding-left: 1.25rem; }
 .doc li { margin-bottom: 0.4rem; }
@@ -221,8 +213,8 @@ a { color: inherit; }
 .doc .summary {
   margin: 0 0 2.5rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  border-left: 4px solid var(--pb-a);
+  background: color-mix(in srgb, var(--pb-a) 9%, transparent);
 }
 .doc .summary ul { margin: 0; }
 
@@ -237,7 +229,7 @@ a { color: inherit; }
   display: none;
   margin: 1.5rem 0 0;
   padding: 0.75rem 1rem;
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--todo-bg);
   color: var(--todo-fg);
 }
