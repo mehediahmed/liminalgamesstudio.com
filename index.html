@@ -66,6 +66,8 @@
   }
   /* Leaves room at the bottom for the night ridge that overlaps it */
   .world--pb .world-inner { padding-bottom: calc(var(--ridge) + clamp(2.5rem, 6vw, 4.5rem)); }
+  /* The studio blue barely shows against the daylight greens */
+  .world--pb :focus-visible { outline-color: var(--pb-fg); }
   .world--lnw {
     --world-base: var(--lnw-a);
     --world-fg: var(--lnw-fg);
@@ -151,10 +153,12 @@
   .meter-steps li.is-on { border-top-color: var(--state); color: var(--world-fg); }
   .meter figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
 
-  /* Screenshots in the order you reach each place, from the street to the
-     alley out back. Each takes the full width so the dark scenes keep their
-     detail, and the night base fills the frame until the image arrives.
-     Without the script they stack down the page. */
+  /* Screenshots. Leave No Witnesses goes in the order you reach each place,
+     from the street to the alley out back; Poly Blockade goes from daylight
+     to dusk, so its last frame is nearly night when the night ridge cuts in.
+     Each takes the full width so the scenes keep their detail, and the
+     world's base fills the frame until the image arrives. Without the script
+     they stack down the page. */
   .viewer { margin: clamp(2.5rem, 6vw, 4rem) 0 0; }
   .viewer-frames {
     display: grid;
@@ -180,12 +184,14 @@
   .viewer.is-ready .viewer-frames::-webkit-scrollbar { display: none; }
   .viewer.is-ready .viewer-frames > li { scroll-snap-align: start; scroll-snap-stop: always; }
 
-  /* The strip under the window is built like the awareness meter: four slots,
-     and the bar over the place on screen lights up */
+  /* The strip under the window is built like the awareness meter: a slot
+     per screenshot, and the bar over the one on screen lights up. On phones
+     the slots wrap into rows of four. */
   .viewer-thumbs {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 9rem));
-    gap: 4px;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 9rem);
+    gap: 0.75rem 4px;
     margin: 0.75rem 0 0;
     padding: 0;
     list-style: none;
@@ -240,6 +246,7 @@
 
   @media (max-width: 720px) {
     .lnw-intro { grid-template-columns: minmax(0, 1fr); }
+    .viewer-thumbs { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 9rem)); }
   }
   @media (prefers-reduced-motion: reduce) {
     .meter-steps li { transition: none; }
@@ -279,6 +286,30 @@
       <div class="world-inner">
         <h3 id="pb-title"><span>Poly</span> <span>Blockade</span></h3>
         <p class="pitch">A low-poly tower defense game for iPhone, iPad and Android. It's coming soon, and it has no ads.</p>
+
+        <div class="viewer">
+          <ol class="viewer-frames" id="pb-frames" aria-label="Screenshots, from the meadow to the volcano">
+            <li><img src="images/pb/16-meadow-cinematic-1280.webp" srcset="images/pb/16-meadow-cinematic-640.webp 640w, images/pb/16-meadow-cinematic-960.webp 960w, images/pb/16-meadow-cinematic-1280.webp 1280w, images/pb/16-meadow-cinematic-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="Towers stand beside dirt roads across a green meadow. A crystal tower fires a blue bolt at a red raptor running through smoke, while a warrior fights a goblin outside the castle walls."></li>
+            <li><img src="images/pb/06-forest-upgrade-wheel-hud-1280.webp" srcset="images/pb/06-forest-upgrade-wheel-hud-640.webp 640w, images/pb/06-forest-upgrade-wheel-hud-960.webp 960w, images/pb/06-forest-upgrade-wheel-hud-1280.webp 1280w, images/pb/06-forest-upgrade-wheel-hud-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="Top-down view of a forest level, with towers on pads between dirt roads. The selected Archer Tower III shows its range as a red ring, and its upgrade wheel offers two upgrades, priced 234 and 207. A panel at the bottom gives its attack, range and attack speed."></li>
+            <li><img src="images/pb/07-forest-tower-abilities-hud-1280.webp" srcset="images/pb/07-forest-tower-abilities-hud-640.webp 640w, images/pb/07-forest-tower-abilities-hud-960.webp 960w, images/pb/07-forest-tower-abilities-hud-1280.webp 1280w, images/pb/07-forest-tower-abilities-hud-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="The same forest level with the Elementalist Sanctum selected. Its red range ring covers a bend in the road, and three abilities circle the tower, priced 180, 200 and 250."></li>
+            <li><img src="images/pb/13-towers-screen-1280.webp" srcset="images/pb/13-towers-screen-640.webp 640w, images/pb/13-towers-screen-960.webp 960w, images/pb/13-towers-screen-1280.webp 1280w, images/pb/13-towers-screen-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="The Towers screen. A card shows Archer Tower I, a fast-firing arrow tower with cheap, quick shots that shred lightly armored creeps. Its upgrade path runs through three levels, then you choose one of two final upgrades: Sharpshooter's Redoubt or Thornveil Volley. Eight towers line the left side, three still locked."></li>
+            <li><img src="images/pb/02-frozen-castle-monster-1280.webp" srcset="images/pb/02-frozen-castle-monster-640.webp 640w, images/pb/02-frozen-castle-monster-960.webp 960w, images/pb/02-frozen-castle-monster-1280.webp 1280w, images/pb/02-frozen-castle-monster-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A snowy level under a white sky. Ice bursts from the road around a giant monster built like a castle tower, red roof and all, as an archer and a warrior attack it. A hooded rogue waits beside a tower on the left."></li>
+            <li><img src="images/pb/08-forest-elf-night-bridge-1280.webp" srcset="images/pb/08-forest-elf-night-bridge-640.webp 640w, images/pb/08-forest-elf-night-bridge-960.webp 960w, images/pb/08-forest-elf-night-bridge-1280.webp 1280w, images/pb/08-forest-elf-night-bridge-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A forest level at dusk under a purple sky. A werewolf and a green beetle cross a wooden bridge over a glowing blue river, toward an elf archer and a warrior in the foreground. Two archers keep watch from a tower behind the bridge."></li>
+            <li><img src="images/pb/10-volcano-dragon-fire-1280.webp" srcset="images/pb/10-volcano-dragon-fire-640.webp 640w, images/pb/10-volcano-dragon-fire-960.webp 960w, images/pb/10-volcano-dragon-fire-1280.webp 1280w, images/pb/10-volcano-dragon-fire-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A volcanic level of grey ash and dead white trees. A red dragon breathes fire over a line of armored knights holding the castle gate, while an archer draws a bow beside them."></li>
+            <li><img src="images/pb/01-volcano-bone-dragon-1280.webp" srcset="images/pb/01-volcano-bone-dragon-640.webp 640w, images/pb/01-volcano-bone-dragon-960.webp 960w, images/pb/01-volcano-bone-dragon-1280.webp 1280w, images/pb/01-volcano-bone-dragon-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="The volcanic level from above. A glowing bone dragon looms over the road near the castle, where knights with shields and two heroes fight small red monsters with spiked maces."></li>
+          </ol>
+          <ol class="viewer-thumbs" aria-label="Choose a screenshot" hidden>
+            <li><button type="button" aria-controls="pb-frames" aria-current="true"><img src="images/pb/16-meadow-cinematic-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The meadow"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/06-forest-upgrade-wheel-hud-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Archer Tower III's upgrades"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/07-forest-tower-abilities-hud-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Elementalist Sanctum's abilities"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/13-towers-screen-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The Towers screen"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/02-frozen-castle-monster-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The snow level"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/08-forest-elf-night-bridge-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The forest at dusk"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/10-volcano-dragon-fire-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The dragon at the gate"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/01-volcano-bone-dragon-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The bone dragon"></button></li>
+          </ol>
+        </div>
+
         <div class="world-foot">
           <p>We'll put the App Store and Google Play links here when it's out.</p>
           <p class="world-links">
@@ -312,16 +343,22 @@
 
         <div class="viewer">
           <ol class="viewer-frames" id="lnw-frames" aria-label="Screenshots, from the street to the alley out back">
+            <li><img src="images/lnw/c01_street_wide-1280.webp" srcset="images/lnw/c01_street_wide-640.webp 640w, images/lnw/c01_street_wide-960.webp 960w, images/lnw/c01_street_wide-1280.webp 1280w, images/lnw/c01_street_wide-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A street at night, seen past a parked car. Across the road, a red light falls on the club: a pink neon sign over a red awning, and red ropes at the door. Office windows glow in the tower behind."></li>
             <li><img src="images/lnw/f01_approach-1280.webp" srcset="images/lnw/f01_approach-640.webp 640w, images/lnw/f01_approach-960.webp 960w, images/lnw/f01_approach-1280.webp 1280w, images/lnw/f01_approach-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="First-person view down a dark street at night, pistol in hand. Across the road, a neon flamingo sign and a red awning mark the club entrance, with red ropes out front."></li>
+            <li><img src="images/lnw/c03_queue_corridor-1280.webp" srcset="images/lnw/c03_queue_corridor-640.webp 640w, images/lnw/c03_queue_corridor-960.webp 960w, images/lnw/c03_queue_corridor-1280.webp 1280w, images/lnw/c03_queue_corridor-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="The club entrance, a narrow brick passage lined with marquee bulbs. Red ropes run down both sides of a striped carpet into the dark room beyond."></li>
             <li><img src="images/lnw/c05_floor_guard-1280.webp" srcset="images/lnw/c05_floor_guard-640.webp 640w, images/lnw/c05_floor_guard-960.webp 960w, images/lnw/c05_floor_guard-1280.webp 1280w, images/lnw/c05_floor_guard-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A club floor lit pink and blue. A guard stands between a stage pole and the booths, with the bar and two neon signs behind."></li>
             <li><img src="images/lnw/f05_target_aim-1280.webp" srcset="images/lnw/f05_target_aim-640.webp 640w, images/lnw/f05_target_aim-960.webp 960w, images/lnw/f05_target_aim-1280.webp 1280w, images/lnw/f05_target_aim-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="First-person view aiming a pistol down a narrow dressing room. Mirror bulbs line the right wall, and the target stands at the far end, just above the sights."></li>
+            <li><img src="images/lnw/c09_alley_long-1280.webp" srcset="images/lnw/c09_alley_long-640.webp 640w, images/lnw/c09_alley_long-960.webp 960w, images/lnw/c09_alley_long-1280.webp 1280w, images/lnw/c09_alley_long-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A long alley at night in blue light, with a fence and a dumpster on the left. An orange lamp glows over a door far down the left wall, and red light spills across the road on the right."></li>
             <li><img src="images/lnw/c08_alley_back_door-1280.webp" srcset="images/lnw/c08_alley_back_door-640.webp 640w, images/lnw/c08_alley_back_door-960.webp 960w, images/lnw/c08_alley_back_door-1280.webp 1280w, images/lnw/c08_alley_back_door-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A dark alley at night. A guard steps out of an open back door into the only pool of light, a red lamp on a brick wall."></li>
           </ol>
           <ol class="viewer-thumbs" aria-label="Choose a screenshot" hidden>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="true"><img src="images/lnw/f01_approach-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The street"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="true"><img src="images/lnw/c01_street_wide-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Across the street"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f01_approach-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The approach"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c03_queue_corridor-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The entrance"></button></li>
             <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c05_floor_guard-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The main floor"></button></li>
             <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f05_target_aim-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The dressing room"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c08_alley_back_door-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The alley"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c09_alley_long-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The alley"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c08_alley_back_door-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The back door"></button></li>
           </ol>
         </div>
 
@@ -446,34 +483,35 @@
     }, { passive: true });
     meter.querySelector('.meter-hint').hidden = false;
 
-    // ---- Screenshot viewer ----
-    // Lines the screenshots up in one window. Swiping or scrolling it moves
-    // through them, the strip below jumps straight to one, and the strip's
-    // lit bar follows whichever is on screen.
-    var viewer = document.querySelector('.viewer');
-    var frames = viewer.querySelector('.viewer-frames');
-    var thumbStrip = viewer.querySelector('.viewer-thumbs');
-    var thumbs = thumbStrip.querySelectorAll('button');
-    var shown = 0;
+    // ---- Screenshot viewers ----
+    // Lines each game's screenshots up in one window. Swiping or scrolling it
+    // moves through them, the strip below jumps straight to one, and the
+    // strip's lit bar follows whichever is on screen.
+    document.querySelectorAll('.viewer').forEach(function (viewer) {
+      var frames = viewer.querySelector('.viewer-frames');
+      var thumbStrip = viewer.querySelector('.viewer-thumbs');
+      var thumbs = thumbStrip.querySelectorAll('button');
+      var shown = 0;
 
-    thumbs.forEach(function (thumb, index) {
-      thumb.addEventListener('click', function () {
-        frames.scrollTo({ left: index * frames.clientWidth });
+      thumbs.forEach(function (thumb, index) {
+        thumb.addEventListener('click', function () {
+          frames.scrollTo({ left: index * frames.clientWidth });
+        });
       });
+      frames.addEventListener('scroll', function () {
+        var index = Math.round(frames.scrollLeft / frames.clientWidth);
+        if (index === shown) return;
+        shown = index;
+        thumbs.forEach(function (thumb, i) {
+          thumb.setAttribute('aria-current', i === index);
+        });
+      }, { passive: true });
+
+      // Focusable so the arrow keys can move through it too
+      frames.tabIndex = 0;
+      viewer.classList.add('is-ready');
+      thumbStrip.hidden = false;
     });
-    frames.addEventListener('scroll', function () {
-      var index = Math.round(frames.scrollLeft / frames.clientWidth);
-      if (index === shown) return;
-      shown = index;
-      thumbs.forEach(function (thumb, i) {
-        thumb.setAttribute('aria-current', i === index);
-      });
-    }, { passive: true });
-
-    // Focusable so the arrow keys can move through it too
-    frames.tabIndex = 0;
-    viewer.classList.add('is-ready');
-    thumbStrip.hidden = false;
   })();
 </script>
 </body>
