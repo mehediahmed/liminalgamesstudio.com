@@ -1,0 +1,47 @@
+{
+  "scene": "Assets/LeaveNoWitnesses/Scenes/Main_Prototype_v2.unity",
+  "output": "Captures/Promo/",
+  "resolution": [1920, 1080],
+  "hud": "off",
+  "notes": [
+    "Framings were scouted in edit mode on 2026-10-13 and shot in Play the same day. The values below are the ones actually shot; 'changed' says what moved from the scout and why.",
+    "Positions and look targets are world metres. 'look' is the point the camera looks at. fov is the camera's vertical field of view in degrees.",
+    "cinematic: a free main camera, no viewmodel. first_person: the player rig at that eye position (the rig puts the eye 1.70 m above the floor standing), viewmodel on, default 75 fov.",
+    "In Play the posted floor guard stands at about (-9.5, -1.1) and the target at about (-7.8, -18.7), not where they spawn. The roaming guard (AI_FFFF839A in the 2026-10-13 session) jogs a loop: east corridor at x=10.5, through the dressing room along z=-19.6, out the back door into the alley to about (-17, -19), and back.",
+    "'wait' marks a shot timed to the roaming guard: capture when it is inside that radius of (x, z)."
+  ],
+  "procedure": [
+    "Only when the owner says the machine is free: Play mode takes the foreground. Never save the scene (see the save warning in the MVP playtest plan).",
+    "If a gamepad is connected: InputSystem.DisableDevice(Gamepad.current) before Play, EnableDevice after (the DualSense phantom-input issue).",
+    "Set the Game view to 1920x1080 with UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1920, 1080, name). Afterwards set GameView.selectedSizeIndex back to what it was and remove the custom size (GameViewSizeGroup.RemoveCustomSize takes the absolute index, not the index among custom sizes).",
+    "Open the scene (the open outlasts the CLI's 5 s main-thread limit; poll until it is loaded), then enter Play. Wait for UniStormSystem.UniStormInitialized.",
+    "Dismiss the briefing with FindAnyObjectByType<BriefingCardView>().Begin(), then let 1-2 s run unpaused so the UniStorm fades finish.",
+    "Hide the HUD: set rootVisualElement.style.display = DisplayStyle.None on the UIDocuments of PlayerHudDocument and AwarenessHudDocument (the crosshair is in PlayerHud).",
+    "Keep guards from reacting: disable AIActorDetectionOptimized on each actor (4: three guards and the target). No guard reacted to a still player in the 2026-10-13 session; hearing was not tested separately.",
+    "First person: teleport the root (Player_Updated_v2_Replacement, which carries PlayerDeathLifecycle itself): CharacterController off, set position, on, Physics.SyncTransforms. Find the floor with a downward raycast first; a scouted spot can sit on a chair. Set yaw with IFacingAuthority.TryClaimFacing(FacingMode.Explicit) + SetFacing (held across evals in AppDomain data), and pitch with reflection on FirstPersonController.xRotation (degrees, positive looks down). Aim the pitch from the real camera position after the stance settles. Crouch with CharacterInput.RawCrouchInput = true. Aim down sights by setting the private AkilaItemInput._aiming on the rig's item inputs. Release the facing claim afterwards.",
+    "Cinematic: disable FirstPersonController (it writes the camera position and rotation), Akila CameraManager (it rewrites the main camera fov every Update) and WeaponOverlayCamera (the only camera that draws the viewmodel, since WeaponOverlayRenderMode is UrpOverlayCamera). Then write the PersistentBaseCamera transform and fov. Keep that camera: the texel-march passes run on TexelMarchManager.MainCamera only. Put the player on the floor under the camera so the sky dome and rain follow; for timed indoor shots park it off the roaming guard's path instead.",
+    "Texel-march settle: in this build the near tier re-captures 6 grid + 6 eye faces every frame even when nothing moves, so FacesRenderedLastFrame never reaches 0. Settle is: about 1-2 s after the move, then !IsGridCycleInProgress && !IsEyeCycleInProgress && IsBootstrapComplete && IsEyeBootstrapComplete on TexelMarchManager.Instance.NearTier.",
+    "Capture: UnityEngine.ScreenCapture.CaptureScreenshot(absolutePath) with the Game view at 1920x1080. Screen.width reads 1920 and the PNG keeps the full texel-march, CRT grid and vignette look; the RenderTexture route was not needed.",
+    "Timed shots: one CLI eval costs about 1.4 s of game time and the roaming guard covers about 4 m/s, so poll and capture separately and it is gone. Poll at normal speed until it is within about 9 m, set Time.timeScale = 0.15, then check the distance and call CaptureScreenshot in the same eval. Restore timeScale to 1.",
+    "Exit Play, re-enable any disabled gamepad, restore the Game view size, and leave the Editor on an empty scene."
+  ],
+  "cinematic": [
+    { "id": "c01_street_wide",        "pos": [-25.0, 1.60, 31.0],  "look": [-8.0, 3.5, 18.0],    "fov": 55, "why": "Establishing: the club across the street, parked car in the foreground" },
+    { "id": "c02_neon_sign_low",      "pos": [-13.0, 0.35, 25.5],  "look": [-7.5, 4.4, 18.5],    "fov": 42, "why": "Low angle on the Pink Flamingo sign and the marquee", "changed": "fov 50 -> 42 and look lowered: the sign was small under a lot of empty sky" },
+    { "id": "c03_queue_corridor",     "pos": [-7.5, 1.60, 16.0],   "look": [-7.5, 1.3, 4.0],     "fov": 60, "why": "Red ropes and marquee bulbs leading into the club" },
+    { "id": "c04_main_floor",         "pos": [-6.5, 2.20, 3.0],    "look": [-7.8, 0.8, -12.0],   "fov": 65, "why": "Wide of the main floor and the stage runway", "changed": "look panned west so the posted guard sits inside the frame instead of cut at the edge" },
+    { "id": "c05_floor_guard",        "pos": [-12.0, 1.85, -6.0],  "look": [-9.4, 1.25, -0.6],   "fov": 50, "why": "The posted main-room guard framed between a pole and the bar", "changed": "camera raised 1.40 -> 1.85 to clear a booth back filling the lower third; look moved to where the guard stands in Play" },
+    { "id": "c06_stage_side",         "pos": [5.3, 2.50, -1.3],    "look": [-6.0, 1.0, -14.0],   "fov": 65, "why": "Birdcage and stage from the east side", "changed": "camera moved right to push two near poles out of frame" },
+    { "id": "c07_dressing_room",      "pos": [2.5, 1.60, -19.6],   "look": [-7.8, 1.3, -20.25],  "fov": 60, "why": "The target's dressing room: mirror bulbs, the roaming guard walking toward the target", "player": [5.3, -1.3], "wait": [-3.0, -19.6, 1.0], "changed": "timed to the roaming guard; the target-only take is in alternates/" },
+    { "id": "c08_alley_back_door",    "pos": [-22.0, 1.60, -12.0], "look": [-15.0, 1.2, -19.5],  "fov": 55, "why": "A guard under the red light at the back door: the dark approach", "wait": [-16.6, -19.4, 1.0], "changed": "timed to the roaming guard; untimed, the door is empty" },
+    { "id": "c09_alley_long",         "pos": [-21.0, 1.60, 12.0],  "look": [-18.0, 1.2, -18.0],  "fov": 55, "why": "Alternate: the length of the alley; reads fine at night" },
+    { "id": "c10_east_corridor",      "pos": [10.5, 1.60, -9.5],   "look": [10.5, 1.3, -19.0],   "fov": 60, "why": "The east corridor toward the back rooms, the roaming guard coming down it", "player": [5.3, -1.3], "wait": [10.5, -14.5, 1.2], "changed": "centred on the corridor (x 9.5 -> 10.5, half the scout frame was the main room) and timed to the roaming guard" }
+  ],
+  "first_person": [
+    { "id": "f01_approach",           "eye": [-18.5, 1.60, 25.8],  "look": [-7.5, 2.0, 19.0],    "stance": "stand",  "why": "The player's start: the lit entrance ahead", "changed": "kept the take without rain; rain streaks crossed the pistol (that take is in alternates/)" },
+    { "id": "f02_queue_entry",        "eye": [-7.5, 1.60, 22.0],   "look": [-7.5, 1.4, 10.0],    "stance": "stand",  "why": "Pistol up at the open doors under the marquee" },
+    { "id": "f03_main_floor",         "eye": [-9.5, 1.60, -9.0],   "look": [-8.4, 1.3, -1.1],    "stance": "stand",  "why": "Across the main floor toward the posted guard", "changed": "eye moved 1 m north: the scouted spot is on a chair and put the eye at 2.75 m; yawed right so the guard clears the pistol" },
+    { "id": "f04_alley_behind_guard", "eye": [-22.6, 1.00, -10.5], "look": [-21.4, 1.2, -18.0],  "stance": "crouch", "why": "Crouched behind the alley guard, the roaming guard lit at the back door beyond", "wait": [-16.6, -19.4, 1.0], "changed": "timed to the roaming guard; untimed, the only guard in frame is a near-black silhouette" },
+    { "id": "f05_target_aim",         "eye": [-1.5, 1.60, -19.5],  "look": [-7.8, 1.45, -18.7],  "stance": "stand",  "aim": true, "why": "Aiming down sights down the dressing room at the target", "changed": "aiming down sights; look moved to where the target stands in Play" }
+  ]
+}
