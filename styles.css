@@ -22,11 +22,6 @@
   --teal: #0fa3a3;
   --blue: #3d6bff;
 
-  /* The mark: a door left ajar in a night wall. The light around the door is
-     cut out of the wall, so the page shows through it. */
-  --mark-wall: #1f1d42;
-  --mark-door: #3a1f40;
-
   /* Leave No Witnesses: a faceted night sky */
   --lnw-a: #171a36;
   --lnw-b: #1f1d42;
@@ -63,8 +58,6 @@
     --lnw-a: #1c2047;
     --lnw-b: #262352;
     --lnw-c: #44234b;
-    --mark-wall: #eef0fa;
-    --mark-door: #a3a8c8;
     color-scheme: dark;
   }
 }
@@ -76,8 +69,6 @@
   --lnw-a: #1c2047;
   --lnw-b: #262352;
   --lnw-c: #44234b;
-  --mark-wall: #eef0fa;
-  --mark-door: #a3a8c8;
   color-scheme: dark;
 }
 
@@ -119,19 +110,9 @@ a { color: inherit; }
   gap: 1rem 2rem;
   padding-block: 1.25rem;
 }
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  color: var(--fg);
-  text-decoration: none;
-  font-size: 1rem;
-  font-stretch: 112%;
-  font-weight: 650;
-}
-.mark { width: 30px; height: 30px; flex: none; }
-.mark .wall { fill: var(--mark-wall); }
-.mark .door { fill: var(--mark-door); }
+.brand { display: block; }
+/* The logo's light parts are transparent, so the page shows through them */
+.logo { display: block; width: auto; height: 3rem; }
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
