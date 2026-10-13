@@ -24,7 +24,7 @@
   /* Hero */
   .hero { padding-block: clamp(2.5rem, 8vw, 6rem) clamp(0.5rem, 2vw, 1.5rem); }
   .hero h1 {
-    max-width: 11em;
+    max-width: 12em;
     margin: 0;
     font-size: clamp(2.5rem, 7.2vw, 6rem);
     font-stretch: 112%;
@@ -33,11 +33,13 @@
     letter-spacing: -0.03em;
     text-wrap: balance;
   }
+  .hero h1 .nowrap { white-space: nowrap; }
   .lead {
     max-width: 34rem;
     margin: 1.75rem 0 0;
     font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
     line-height: 1.5;
+    text-wrap: pretty;
   }
 
   /* Game worlds. --ridge is the depth of the mountain line along each world's
@@ -61,7 +63,6 @@
     --world-fg: var(--pb-fg);
     --world-muted: var(--pb-muted);
     --world-line: var(--pb-line);
-    --status-dot: var(--pb-fg);
   }
   /* Leaves room at the bottom for the night ridge that overlaps it */
   .world--pb .world-inner { padding-bottom: calc(var(--ridge) + clamp(2.5rem, 6vw, 4.5rem)); }
@@ -70,24 +71,7 @@
     --world-fg: var(--lnw-fg);
     --world-muted: var(--lnw-muted);
     --world-line: var(--lnw-line);
-    --status-dot: var(--amber);
     margin-top: calc(-1 * var(--ridge));
-  }
-
-  .status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1.25rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-  }
-  .status::before {
-    content: "";
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--status-dot);
   }
 
   /* Each title takes one end of Archivo's width axis */
@@ -99,12 +83,14 @@
   }
   .world h3 span { display: block; }
   .world--pb h3 {
-    font-size: clamp(3rem, 12.5vw, 9.5rem);
+    /* The 2.5rem floor keeps "Blockade" inside the gutter on 320px phones */
+    font-size: clamp(2.5rem, 12.5vw, 9.5rem);
     font-stretch: 125%;
     letter-spacing: -0.02em;
   }
   .world--lnw h3 {
-    font-size: clamp(4.5rem, 13vw, 9.5rem);
+    /* The floor eases off below 343px so "Witnesses" stays inside the gutter */
+    font-size: clamp(min(4.5rem, 21vw), 13vw, 9.5rem);
     font-stretch: 62%;
   }
   .pitch {
@@ -112,7 +98,9 @@
     margin: 1.75rem 0 0;
     font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
     line-height: 1.5;
+    text-wrap: pretty;
   }
+  .pitch + .pitch { margin-top: 1em; }
   .world-foot {
     display: flex;
     flex-wrap: wrap;
@@ -126,16 +114,18 @@
   .world-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
   .world-links a { color: var(--world-fg); font-weight: 600; text-underline-offset: 0.2em; }
 
-  /* Leave No Witnesses: the condensed title stands beside the pitch and meter */
+  /* Leave No Witnesses: the condensed title stands beside one column of text,
+     with the awareness meter between how you hide and what happens after */
   .lnw-intro {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: 2rem clamp(2rem, 6vw, 5rem);
     align-items: start;
   }
-  .lnw-intro .pitch { margin-top: 0; }
+  .lnw-intro .pitch:first-child { margin-top: 0; }
 
-  .meter { margin: 2.25rem 0 0; max-width: 34rem; }
+  .meter { margin: 2.25rem 0; max-width: 34rem; }
+  .meter + .pitch { margin-top: 0; }
   .meter-steps {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -161,24 +151,6 @@
   .meter-steps li.is-on { border-top-color: var(--state); color: var(--world-fg); }
   .meter figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
 
-  .pillars {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1.75rem 2.5rem;
-    margin: clamp(3rem, 6vw, 4.5rem) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-  .pillars li { padding-top: 1rem; border-top: 1px solid var(--world-line); }
-  .pillars h4 {
-    margin: 0 0 0.375rem;
-    font-size: 1.375rem;
-    font-stretch: 62%;
-    font-weight: 700;
-    line-height: 1.15;
-  }
-  .pillars p { margin: 0; color: var(--world-muted); font-size: 0.9375rem; line-height: 1.55; }
-
   /* Contact */
   .contact { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
   .contact h2 {
@@ -190,11 +162,12 @@
     letter-spacing: -0.02em;
   }
   .contact-intro { margin: 0.5rem 0 1.75rem; color: var(--muted); }
+  .contact-intro a { color: var(--fg); text-underline-offset: 0.2em; }
   .contact-address {
     display: block;
     margin: 0 0 1.75rem;
     /* Scales with the viewport so the address stays on one line on phones */
-    font-size: clamp(1.125rem, 5vw, 3.25rem);
+    font-size: clamp(1rem, 5vw, 3.25rem);
     font-stretch: 112%;
     font-weight: 600;
     line-height: 1.15;
@@ -237,8 +210,8 @@
 <main id="top">
   <div class="wrap">
     <section class="hero">
-      <h1>Low-poly games about planning.</h1>
-      <p class="lead">Liminal Games Studio is an independent game developer. In our games you read the situation, commit to a plan, and deal with how it plays out.</p>
+      <h1>We make <span class="nowrap">low-poly</span> games about planning.</h1>
+      <p class="lead">We're an independent studio. In both of our games, you read the situation, commit to a plan, and then live with how it plays out.</p>
     </section>
   </div>
 
@@ -248,11 +221,10 @@
     <article class="world world--pb" aria-labelledby="pb-title">
       <canvas class="facets" aria-hidden="true" data-stops="--pb-a --pb-b --pb-c" data-cell="64" data-shade="0.22" data-seed="12" data-ridge data-animate></canvas>
       <div class="world-inner">
-        <p class="status">Coming soon</p>
         <h3 id="pb-title"><span>Poly</span> <span>Blockade</span></h3>
-        <p class="pitch">A low-poly tower defense game for iPhone, iPad and Android.</p>
+        <p class="pitch">A low-poly tower defense game for iPhone, iPad and Android. It's coming soon, and it has no ads.</p>
         <div class="world-foot">
-          <p>Store links will be posted here at launch.</p>
+          <p>We'll put the App Store and Google Play links here when it's out.</p>
           <p class="world-links">
             <a href="poly-blockade/support.html">Support</a>
             <a href="poly-blockade/privacy.html">Privacy policy</a>
@@ -264,40 +236,26 @@
     <article class="world world--lnw" aria-labelledby="lnw-title">
       <canvas class="facets" aria-hidden="true" data-stops="--lnw-a --lnw-b --lnw-c" data-cell="72" data-shade="0.22" data-seed="31" data-ridge></canvas>
       <div class="world-inner">
-        <p class="status">In development</p>
         <div class="lnw-intro">
           <h3 id="lnw-title"><span>Leave</span> <span>No</span> <span>Witnesses</span></h3>
           <div>
-            <p class="pitch">A first-person stealth-action game for PC. Get in, find your target and get out. Guards hunt you by sight and sound, civilians run for help, and anything you leave behind can give you away.</p>
+            <p class="pitch">We're still making this one. It's a first-person stealth-action game for PC: get in, find your target, get out. Guards hunt you by sight and sound, civilians run for help, and anything you leave behind can give you away.</p>
+            <p class="pitch">Pools of darkness hide you and footsteps carry, so crouch behind the bar and let the guard walk past.</p>
             <figure class="meter">
               <ol class="meter-steps">
-                <li>Unaware</li>
+                <li class="is-on">Unaware</li>
                 <li>Suspicious</li>
                 <li>Alert</li>
                 <li>Combat</li>
               </ol>
-              <figcaption>Every guard climbs these four steps before opening fire, and the HUD shows you where each one stands.</figcaption>
+              <figcaption>Every guard climbs these four steps before opening fire, and an indicator at the edge of the screen fills toward whoever is noticing you.<span class="meter-hint" hidden> This meter is watching you too: move and it climbs, keep still and it settles.</span></figcaption>
             </figure>
+            <p class="pitch">Mistakes stay where you left them. A wounded guard bleeds and screams, blood trails get followed, and bodies left in the open get found.</p>
           </div>
         </div>
 
-        <ul class="pillars">
-          <li>
-            <h4>Light and sound decide</h4>
-            <p>Pools of darkness hide you. Footsteps carry. Crouch behind the bar and the guard walks past.</p>
-          </li>
-          <li>
-            <h4>You see it coming</h4>
-            <p>Losing stealth is never a surprise. An edge-of-screen indicator fills toward whoever is noticing you.</p>
-          </li>
-          <li>
-            <h4>Consequences stay</h4>
-            <p>A wounded guard bleeds and screams. Blood trails get followed, and bodies left in the open get found.</p>
-          </li>
-        </ul>
-
         <div class="world-foot">
-          <p>Steam page coming soon.</p>
+          <p>There's no Steam page yet.</p>
         </div>
       </div>
     </article>
@@ -305,8 +263,8 @@
 
   <div class="wrap">
     <section class="contact" id="contact" aria-labelledby="contact-title">
-      <h2 id="contact-title">Contact</h2>
-      <p class="contact-intro">Press, publishing, business, or anything else.</p>
+      <h2 id="contact-title">Write to us</h2>
+      <p class="contact-intro">Press, publishing, business, or anything else. For help with Poly Blockade, start with the <a href="poly-blockade/support.html">support page</a>.</p>
       <span class="contact-address" id="email-address" data-user="contact" data-domain="liminalgamesstudio.com">contact at liminalgamesstudio.com</span>
       <div class="actions">
         <a class="btn btn--solid" id="email-link" href="#contact">Email us</a>
@@ -360,25 +318,62 @@
     });
 
     // ---- Awareness meter ----
-    // Steps through the four states, holds on Combat, then resets.
-    var steps = document.querySelectorAll('.meter-steps li');
-    var stepCount = steps.length;
-    var holdTicks = 2;
+    // The meter notices the visitor the way a guard notices the player. Moving
+    // the pointer or scrolling while it's on screen is noise and climbs it a
+    // step at a time; keeping still lets it settle back to Unaware.
+    var meter = document.querySelector('.meter');
+    var steps = meter.querySelectorAll('.meter-steps li');
+    var stepSize = 450; // pixels of movement per step
+    var maxNoise = stepSize * steps.length - 1;
+    var stillDelay = 700;
+    var noise = 0;
+    var lastMove = 0;
+    var onScreen = !window.IntersectionObserver;
+    var settling = null;
+    var pointer = null;
+    var lastScrollY = window.scrollY;
 
-    function showState(level) {
+    function showState() {
+      var level = Math.floor(noise / stepSize);
       steps.forEach(function (step, index) {
         step.classList.toggle('is-on', index <= level);
       });
     }
 
-    showState(0);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function settle() {
+      if (Date.now() - lastMove < stillDelay) return;
+      noise = Math.max(0, noise - stepSize / 5);
+      showState();
+      if (!noise) {
+        clearInterval(settling);
+        settling = null;
+      }
+    }
 
-    var tick = 0;
-    setInterval(function () {
-      tick = (tick + 1) % (stepCount + holdTicks);
-      showState(Math.min(tick, stepCount - 1));
-    }, 1400);
+    function hear(distance) {
+      if (!onScreen) return;
+      noise = Math.min(maxNoise, noise + distance);
+      lastMove = Date.now();
+      showState();
+      if (!settling) settling = setInterval(settle, 120);
+    }
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+      }).observe(meter);
+    }
+    // On touch screens scrolling is the movement; a tap would read as a jump.
+    document.addEventListener('pointermove', function (event) {
+      if (event.pointerType === 'touch') return;
+      if (pointer) hear(Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y));
+      pointer = { x: event.clientX, y: event.clientY };
+    }, { passive: true });
+    window.addEventListener('scroll', function () {
+      hear(Math.abs(window.scrollY - lastScrollY));
+      lastScrollY = window.scrollY;
+    }, { passive: true });
+    meter.querySelector('.meter-hint').hidden = false;
   })();
 </script>
 </body>
