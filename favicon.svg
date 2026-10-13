@@ -1,18 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
-    .ink { color: #1a1d3a; }
-    .facet-a { fill: #0fa3a3; }
-    .facet-b { fill: #3d6bff; }
-    .light { fill: #ffb627; }
+    .wall { fill: #1f1d42; }
+    .door { fill: #3a1f40; }
     @media (prefers-color-scheme: dark) {
-      .ink { color: #eef0fa; }
+      .wall { fill: #eef0fa; }
+      .door { fill: #a3a8c8; }
     }
   </style>
-  <g class="ink">
-    <path d="M9 27V5h14v22" fill="none" stroke="currentColor" stroke-width="2"/>
-    <path class="facet-a" d="M10 6h9.5L10 27z"/>
-    <path class="facet-b" d="M19.5 6v21H10z"/>
-    <rect class="light" x="19.5" y="6" width="2.5" height="21"/>
-    <path d="M4 28h24" stroke="currentColor" stroke-width="2"/>
-  </g>
+  <path class="wall" fill-rule="evenodd" d="M3 3H29V29H3Z M9 5H19L12.5 6.5V21.5L19 23H25L27 26.5H9Z"/>
+  <path class="door" d="M12.5 6.5L19 5V23L12.5 21.5Z"/>
 </svg>

@@ -16,11 +16,16 @@
   --muted: #5a5f80;
   --line: #d6d9ea;
 
-  /* Studio palette, used by the mark, focus rings and the awareness meter */
+  /* Studio palette, used by focus rings and the awareness meter */
   --coral: #ff5e5b;
   --amber: #ffb627;
   --teal: #0fa3a3;
   --blue: #3d6bff;
+
+  /* The mark: a door left ajar in a night wall. The light around the door is
+     cut out of the wall, so the page shows through it. */
+  --mark-wall: #1f1d42;
+  --mark-door: #3a1f40;
 
   /* Leave No Witnesses: a faceted night sky */
   --lnw-a: #171a36;
@@ -58,6 +63,8 @@
     --lnw-a: #1c2047;
     --lnw-b: #262352;
     --lnw-c: #44234b;
+    --mark-wall: #eef0fa;
+    --mark-door: #a3a8c8;
     color-scheme: dark;
   }
 }
@@ -69,6 +76,8 @@
   --lnw-a: #1c2047;
   --lnw-b: #262352;
   --lnw-c: #44234b;
+  --mark-wall: #eef0fa;
+  --mark-door: #a3a8c8;
   color-scheme: dark;
 }
 
@@ -121,9 +130,8 @@ a { color: inherit; }
   font-weight: 650;
 }
 .mark { width: 30px; height: 30px; flex: none; }
-.mark .facet-a { fill: var(--teal); }
-.mark .facet-b { fill: var(--blue); }
-.mark .light { fill: var(--amber); }
+.mark .wall { fill: var(--mark-wall); }
+.mark .door { fill: var(--mark-door); }
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
