@@ -151,6 +151,67 @@
   .meter-steps li.is-on { border-top-color: var(--state); color: var(--world-fg); }
   .meter figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
 
+  /* Screenshots in the order you reach each place, from the street to the
+     alley out back. Each takes the full width so the dark scenes keep their
+     detail, and the night base fills the frame until the image arrives.
+     Without the script they stack down the page. */
+  .viewer { margin: clamp(2.5rem, 6vw, 4rem) 0 0; }
+  .viewer-frames {
+    display: grid;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .viewer-frames img { display: block; width: 100%; height: auto; background: var(--world-base); }
+
+  /* With the script, the frames line up side by side in one window that you
+     swipe or scroll through, one place at a time */
+  .viewer.is-ready .viewer-frames {
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    gap: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .viewer.is-ready .viewer-frames::-webkit-scrollbar { display: none; }
+  .viewer.is-ready .viewer-frames > li { scroll-snap-align: start; scroll-snap-stop: always; }
+
+  /* The strip under the window is built like the awareness meter: four slots,
+     and the bar over the place on screen lights up */
+  .viewer-thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 9rem));
+    gap: 4px;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .viewer-thumbs button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0 0;
+    border: 0;
+    border-top: 4px solid var(--world-line);
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  .viewer-thumbs img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--world-base);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .viewer-thumbs button:hover img { opacity: 0.8; }
+  .viewer-thumbs [aria-current="true"] { border-top-color: var(--world-fg); }
+  .viewer-thumbs [aria-current="true"] img { opacity: 1; }
+
   /* Contact */
   .contact { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
   .contact h2 {
@@ -182,6 +243,8 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .meter-steps li { transition: none; }
+    .viewer.is-ready .viewer-frames { scroll-behavior: auto; }
+    .viewer-thumbs button, .viewer-thumbs img { transition: none; }
   }
 </style>
 </head>
@@ -247,8 +310,23 @@
           </div>
         </div>
 
+        <div class="viewer">
+          <ol class="viewer-frames" id="lnw-frames" aria-label="Screenshots, from the street to the alley out back">
+            <li><img src="images/lnw/f01_approach-1280.webp" srcset="images/lnw/f01_approach-640.webp 640w, images/lnw/f01_approach-960.webp 960w, images/lnw/f01_approach-1280.webp 1280w, images/lnw/f01_approach-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="First-person view down a dark street at night, pistol in hand. Across the road, a neon flamingo sign and a red awning mark the club entrance, with red ropes out front."></li>
+            <li><img src="images/lnw/c05_floor_guard-1280.webp" srcset="images/lnw/c05_floor_guard-640.webp 640w, images/lnw/c05_floor_guard-960.webp 960w, images/lnw/c05_floor_guard-1280.webp 1280w, images/lnw/c05_floor_guard-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A club floor lit pink and blue. A guard stands between a stage pole and the booths, with the bar and two neon signs behind."></li>
+            <li><img src="images/lnw/f05_target_aim-1280.webp" srcset="images/lnw/f05_target_aim-640.webp 640w, images/lnw/f05_target_aim-960.webp 960w, images/lnw/f05_target_aim-1280.webp 1280w, images/lnw/f05_target_aim-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="First-person view aiming a pistol down a narrow dressing room. Mirror bulbs line the right wall, and the target stands at the far end, just above the sights."></li>
+            <li><img src="images/lnw/c08_alley_back_door-1280.webp" srcset="images/lnw/c08_alley_back_door-640.webp 640w, images/lnw/c08_alley_back_door-960.webp 960w, images/lnw/c08_alley_back_door-1280.webp 1280w, images/lnw/c08_alley_back_door-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A dark alley at night. A guard steps out of an open back door into the only pool of light, a red lamp on a brick wall."></li>
+          </ol>
+          <ol class="viewer-thumbs" aria-label="Choose a screenshot" hidden>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="true"><img src="images/lnw/f01_approach-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The street"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c05_floor_guard-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The main floor"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f05_target_aim-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The dressing room"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c08_alley_back_door-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The alley"></button></li>
+          </ol>
+        </div>
+
         <div class="world-foot">
-          <p>There's no Steam page yet.</p>
+          <p>Screenshots are from the current build. There's no Steam page yet.</p>
         </div>
       </div>
     </article>
@@ -367,6 +445,35 @@
       lastScrollY = window.scrollY;
     }, { passive: true });
     meter.querySelector('.meter-hint').hidden = false;
+
+    // ---- Screenshot viewer ----
+    // Lines the screenshots up in one window. Swiping or scrolling it moves
+    // through them, the strip below jumps straight to one, and the strip's
+    // lit bar follows whichever is on screen.
+    var viewer = document.querySelector('.viewer');
+    var frames = viewer.querySelector('.viewer-frames');
+    var thumbStrip = viewer.querySelector('.viewer-thumbs');
+    var thumbs = thumbStrip.querySelectorAll('button');
+    var shown = 0;
+
+    thumbs.forEach(function (thumb, index) {
+      thumb.addEventListener('click', function () {
+        frames.scrollTo({ left: index * frames.clientWidth });
+      });
+    });
+    frames.addEventListener('scroll', function () {
+      var index = Math.round(frames.scrollLeft / frames.clientWidth);
+      if (index === shown) return;
+      shown = index;
+      thumbs.forEach(function (thumb, i) {
+        thumb.setAttribute('aria-current', i === index);
+      });
+    }, { passive: true });
+
+    // Focusable so the arrow keys can move through it too
+    frames.tabIndex = 0;
+    viewer.classList.add('is-ready');
+    thumbStrip.hidden = false;
   })();
 </script>
 </body>
