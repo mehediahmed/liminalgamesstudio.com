@@ -6,15 +6,19 @@
 <title>Liminal Games Studio</title>
 <meta name="description" content="Liminal Games Studio is an independent studio making low-poly games. Poly Blockade, a tower defense game for mobile, is coming soon. Leave No Witnesses, a first-person stealth-action game for PC, is in development.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Liminal Games Studio">
 <meta property="og:title" content="Liminal Games Studio">
 <meta property="og:description" content="An independent studio making low-poly games. Poly Blockade is coming soon to mobile.">
 <meta property="og:url" content="https://liminalgamesstudio.com/">
+<meta property="og:image" content="https://liminalgamesstudio.com/images/og/studio.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Poly Blockade's title on bright green and yellow low-poly hills, with a dark night ridge cutting in below under the title Leave No Witnesses.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://liminalgamesstudio.com/">
 <link rel="icon" href="favicon.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=5">
 <style>
   /* Home page. The studio statement sits in open sky, then each game is a
      full-bleed low-poly world: Poly Blockade's daylight hills rise under the
@@ -75,6 +79,8 @@
     --world-line: var(--lnw-line);
     margin-top: calc(-1 * var(--ridge));
   }
+  /* The script sets --night-tail so the facets run on to the end of the page */
+  .world--lnw > .facets { height: calc(100% + var(--night-tail, 0px)); }
 
   /* Each title takes one end of Archivo's width axis */
   .world h3 {
@@ -218,6 +224,21 @@
   .viewer-thumbs [aria-current="true"] { border-top-color: var(--world-fg); }
   .viewer-thumbs [aria-current="true"] img { opacity: 1; }
 
+  /* Contact and the footer stay in the night, so the page ends where the
+     scroll does. They stand on the night's darkest color until the script
+     stretches the night facets down behind them, or for good without it. */
+  .night {
+    --bg: var(--lnw-a);
+    --fg: var(--lnw-fg);
+    --muted: var(--lnw-muted);
+    --line: var(--lnw-line);
+    position: relative;
+    padding-inline: var(--gutter);
+    background: var(--lnw-a);
+    color: var(--fg);
+  }
+  .night.is-faceted { background: none; }
+
   /* Contact */
   .contact { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
   .contact h2 {
@@ -299,14 +320,14 @@
             <li><img src="images/pb/01-volcano-bone-dragon-1280.webp" srcset="images/pb/01-volcano-bone-dragon-640.webp 640w, images/pb/01-volcano-bone-dragon-960.webp 960w, images/pb/01-volcano-bone-dragon-1280.webp 1280w, images/pb/01-volcano-bone-dragon-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="The volcanic level from above. A glowing bone dragon looms over the road near the castle, where knights with shields and two heroes fight small red monsters with spiked maces."></li>
           </ol>
           <ol class="viewer-thumbs" aria-label="Choose a screenshot" hidden>
-            <li><button type="button" aria-controls="pb-frames" aria-current="true"><img src="images/pb/16-meadow-cinematic-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The meadow"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/06-forest-upgrade-wheel-hud-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Archer Tower III's upgrades"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/07-forest-tower-abilities-hud-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Elementalist Sanctum's abilities"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/13-towers-screen-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The Towers screen"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/02-frozen-castle-monster-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The snow level"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/08-forest-elf-night-bridge-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The forest at dusk"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/10-volcano-dragon-fire-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The dragon at the gate"></button></li>
-            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/01-volcano-bone-dragon-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The bone dragon"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="true"><img src="images/pb/16-meadow-cinematic-320.webp" srcset="images/pb/16-meadow-cinematic-320.webp 320w, images/pb/16-meadow-cinematic-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The meadow"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/06-forest-upgrade-wheel-hud-320.webp" srcset="images/pb/06-forest-upgrade-wheel-hud-320.webp 320w, images/pb/06-forest-upgrade-wheel-hud-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="Archer Tower III's upgrades"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/07-forest-tower-abilities-hud-320.webp" srcset="images/pb/07-forest-tower-abilities-hud-320.webp 320w, images/pb/07-forest-tower-abilities-hud-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="Elementalist Sanctum's abilities"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/13-towers-screen-320.webp" srcset="images/pb/13-towers-screen-320.webp 320w, images/pb/13-towers-screen-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The Towers screen"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/02-frozen-castle-monster-320.webp" srcset="images/pb/02-frozen-castle-monster-320.webp 320w, images/pb/02-frozen-castle-monster-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The snow level"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/08-forest-elf-night-bridge-320.webp" srcset="images/pb/08-forest-elf-night-bridge-320.webp 320w, images/pb/08-forest-elf-night-bridge-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The forest at dusk"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/10-volcano-dragon-fire-320.webp" srcset="images/pb/10-volcano-dragon-fire-320.webp 320w, images/pb/10-volcano-dragon-fire-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The dragon at the gate"></button></li>
+            <li><button type="button" aria-controls="pb-frames" aria-current="false"><img src="images/pb/01-volcano-bone-dragon-320.webp" srcset="images/pb/01-volcano-bone-dragon-320.webp 320w, images/pb/01-volcano-bone-dragon-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The bone dragon"></button></li>
           </ol>
         </div>
 
@@ -352,13 +373,13 @@
             <li><img src="images/lnw/c08_alley_back_door-1280.webp" srcset="images/lnw/c08_alley_back_door-640.webp 640w, images/lnw/c08_alley_back_door-960.webp 960w, images/lnw/c08_alley_back_door-1280.webp 1280w, images/lnw/c08_alley_back_door-1920.webp 1920w" sizes="min(92vw, 1152px)" width="1920" height="1080" loading="lazy" decoding="async" alt="A dark alley at night. A guard steps out of an open back door into the only pool of light, a red lamp on a brick wall."></li>
           </ol>
           <ol class="viewer-thumbs" aria-label="Choose a screenshot" hidden>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="true"><img src="images/lnw/c01_street_wide-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="Across the street"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f01_approach-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The approach"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c03_queue_corridor-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The entrance"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c05_floor_guard-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The main floor"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f05_target_aim-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The dressing room"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c09_alley_long-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The alley"></button></li>
-            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c08_alley_back_door-640.webp" width="640" height="360" loading="lazy" decoding="async" alt="The back door"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="true"><img src="images/lnw/c01_street_wide-320.webp" srcset="images/lnw/c01_street_wide-320.webp 320w, images/lnw/c01_street_wide-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="Across the street"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f01_approach-320.webp" srcset="images/lnw/f01_approach-320.webp 320w, images/lnw/f01_approach-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The approach"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c03_queue_corridor-320.webp" srcset="images/lnw/c03_queue_corridor-320.webp 320w, images/lnw/c03_queue_corridor-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The entrance"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c05_floor_guard-320.webp" srcset="images/lnw/c05_floor_guard-320.webp 320w, images/lnw/c05_floor_guard-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The main floor"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/f05_target_aim-320.webp" srcset="images/lnw/f05_target_aim-320.webp 320w, images/lnw/f05_target_aim-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The dressing room"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c09_alley_long-320.webp" srcset="images/lnw/c09_alley_long-320.webp 320w, images/lnw/c09_alley_long-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The alley"></button></li>
+            <li><button type="button" aria-controls="lnw-frames" aria-current="false"><img src="images/lnw/c08_alley_back_door-320.webp" srcset="images/lnw/c08_alley_back_door-320.webp 320w, images/lnw/c08_alley_back_door-640.webp 640w" sizes="(max-width: 720px) 25vw, 9rem" width="320" height="180" loading="lazy" decoding="async" alt="The back door"></button></li>
           </ol>
         </div>
 
@@ -369,42 +390,63 @@
     </article>
   </section>
 
-  <div class="wrap">
-    <section class="contact" id="contact" aria-labelledby="contact-title">
-      <h2 id="contact-title">Write to us</h2>
-      <p class="contact-intro">Press, publishing, business, or anything else. For help with Poly Blockade, start with the <a href="poly-blockade/support.html">support page</a>.</p>
-      <span class="contact-address" id="email-address" data-user="contact" data-domain="liminalgamesstudio.com">contact at liminalgamesstudio.com</span>
-      <div class="actions">
-        <a class="btn btn--solid" id="email-link" href="#contact">Email us</a>
-        <button class="btn" id="copy-email" type="button">Copy address</button>
-        <span class="copy-status" id="copy-status" aria-live="polite"></span>
-      </div>
-    </section>
+  <div class="night full-bleed">
+    <div class="wrap">
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">Write to us</h2>
+        <p class="contact-intro">Press, publishing, business, or anything else. For help with Poly Blockade, start with the <a href="poly-blockade/support.html">support page</a>.</p>
+        <span class="contact-address" id="email-address">contact@liminalgamesstudio.com</span>
+        <div class="actions">
+          <a class="btn btn--solid" href="mailto:contact@liminalgamesstudio.com">Email us</a>
+          <button class="btn" id="copy-email" type="button" hidden>Copy address</button>
+          <span class="copy-status" id="copy-status" aria-live="polite"></span>
+        </div>
+      </section>
+    </div>
   </div>
 </main>
 
-<div class="wrap">
-  <footer class="site-footer">
-    <span>&copy; 2026 Liminal Games Studio</span>
-    <nav aria-label="Poly Blockade">
-      <a href="poly-blockade/support.html">Poly Blockade support</a>
-      <a href="poly-blockade/privacy.html">Poly Blockade privacy</a>
-    </nav>
-  </footer>
+<div class="night full-bleed">
+  <div class="wrap">
+    <footer class="site-footer">
+      <span>&copy; 2026 Liminal Games Studio</span>
+      <nav aria-label="Poly Blockade">
+        <a href="poly-blockade/support.html">Poly Blockade support</a>
+        <a href="poly-blockade/privacy.html">Poly Blockade privacy</a>
+      </nav>
+    </footer>
+  </div>
 </div>
 
-<script src="facets.js?v=2"></script>
 <script>
   (function () {
-    // ---- Contact ----
-    // The address is assembled here so scrapers reading the raw HTML never see it whole.
-    var addressEl = document.getElementById('email-address');
-    var address = addressEl.dataset.user + '@' + addressEl.dataset.domain;
-    addressEl.textContent = address;
-    document.getElementById('email-link').href = 'mailto:' + address;
+    // ---- Night ----
+    // The night world's facets reach down behind Contact and the footer, so
+    // the page ends in night. CSS can't size the canvas by the elements after
+    // it, so --night-tail carries their height. This runs before facets.js
+    // so the canvas is first painted at its full size.
+    var night = document.querySelector('.world--lnw');
+    var tail = document.querySelectorAll('.night');
 
+    function measureTail() {
+      var end = tail[tail.length - 1].getBoundingClientRect().bottom;
+      night.style.setProperty('--night-tail', Math.max(0, end - night.getBoundingClientRect().bottom) + 'px');
+    }
+    measureTail();
+    if (window.ResizeObserver) {
+      var tailObserver = new ResizeObserver(measureTail);
+      tail.forEach(function (part) { tailObserver.observe(part); });
+    } else {
+      window.addEventListener('resize', measureTail);
+    }
+    tail.forEach(function (part) { part.classList.add('is-faceted'); });
+
+    // ---- Contact ----
+    var addressEl = document.getElementById('email-address');
+    var address = addressEl.textContent;
     var copyButton = document.getElementById('copy-email');
     var copyStatus = document.getElementById('copy-status');
+    copyButton.hidden = false;
 
     function selectAddress() {
       var range = document.createRange();
@@ -514,5 +556,6 @@
     });
   })();
 </script>
+<script src="facets.js?v=3"></script>
 </body>
 </html>

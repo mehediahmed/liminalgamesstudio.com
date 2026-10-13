@@ -3,7 +3,7 @@
 // flat-shaded against one light. Colors come from the CSS tokens named in
 // data-stops, so the palette stays in the stylesheet.
 //
-//   data-stops    space-separated token names, e.g. "--teal --blue --coral"
+//   data-stops    space-separated token names, e.g. "--pb-a --pb-b --pb-c"
 //   data-cell     mesh cell size in CSS pixels
 //   data-shade    how strongly the light varies facet brightness (0 to 1)
 //   data-seed     fixed seed, so shapes stay the same across reloads and resizes
@@ -12,6 +12,13 @@
 //   data-animate  slowly swing the light (skipped for reduced motion)
 (function () {
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // iOS Safari leaves a canvas blank past about 16.7 million pixels, so a very
+  // tall canvas gives up some sharpness to stay under that.
+  var maxPixels = 16000000;
+  // The light takes about 18 seconds to swing across and back, so 20 repaints a
+  // second look the same as 60 at a third of the cost. The gap sits just under
+  // 50ms so a 60Hz screen paints every third frame rather than every fourth.
+  var frameGap = 45;
 
   function seededRandom(seed) {
     return function () {
@@ -182,7 +189,7 @@
       if (!rect.width || !rect.height) return;
       state.width = rect.width;
       state.height = rect.height;
-      state.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      state.pixelRatio = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(maxPixels / (rect.width * rect.height)));
       canvas.width = Math.round(rect.width * state.pixelRatio);
       canvas.height = Math.round(rect.height * state.pixelRatio);
 
@@ -209,19 +216,34 @@
 
     if (!('animate' in canvas.dataset) || reducedMotion) return;
 
-    var visible = true;
-    if (window.IntersectionObserver) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-      }).observe(canvas);
-    }
-    requestAnimationFrame(function frame(now) {
-      if (visible && state.width) {
+    // The loop runs only while the canvas is on screen.
+    var running = false;
+    var pending = 0;
+    var lastPaint = 0;
+
+    function frame(now) {
+      pending = 0;
+      if (!running) return;
+      if (state.width && now - lastPaint >= frameGap) {
+        lastPaint = now;
         state.time = now;
         paint(state, now);
       }
-      requestAnimationFrame(frame);
-    });
+      pending = requestAnimationFrame(frame);
+    }
+
+    function run(on) {
+      running = on;
+      if (on && !pending) pending = requestAnimationFrame(frame);
+    }
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        run(entries[0].isIntersecting);
+      }).observe(canvas);
+    } else {
+      run(true);
+    }
   }
 
   document.querySelectorAll('canvas.facets').forEach(mountFacets);

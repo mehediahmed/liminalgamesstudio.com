@@ -1,7 +1,7 @@
 <liminal_design>
 This is the website for Liminal Games Studio, an independent studio making low-poly
-games. It is a static site (index.html, styles.css, facets.js, and the Poly Blockade
-support/privacy pages). No framework, no build step.
+games. It is a static site (index.html, 404.html, styles.css, facets.js, and the Poly
+Blockade support/privacy pages). No framework, no build step.
 
 The site already has a visual identity. Extend it; don't reinvent it. Generic output
 (stock hero, card grids, gradient blobs, icon rows) is the failure to avoid, but so is
@@ -15,7 +15,7 @@ Identity
   dark text). Leave No Witnesses is the night world (--lnw-* tokens: indigo to plum,
   light text). The page moves from day into night as you scroll. New content belongs
   to one world or to the neutral studio layer (--bg, --fg, --muted, --line).
-- Type: Archivo only. Its width axis is the identity: wide for Poly Blockade,
+- Type: Archivo only, self-hosted in fonts/. Its width axis is the identity: wide for Poly Blockade,
   condensed for Leave No Witnesses, normal width for studio text. No second font
   family, no monospace labels, no all-caps eyebrow labels.
 - Color: every color is a token in styles.css :root. Use the existing ones. If you
@@ -49,6 +49,6 @@ Constraints
   thing on the page, so add them sparingly.
 - Semantic HTML, a real heading order, visible focus states.
 - Pages load styles.css and facets.js with a ?v=N query so browsers don't pair new
-  HTML with a cached old file. When either file changes, bump its N in all three
-  pages (index.html and both poly-blockade pages).
+  HTML with a cached old file. When either file changes, bump its N in every page
+  (index.html, 404.html and both poly-blockade pages).
 </liminal_design>
