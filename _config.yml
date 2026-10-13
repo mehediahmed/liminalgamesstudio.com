@@ -1,0 +1,7 @@
+# GitHub Pages builds the site with Jekyll. These stay in the repo but are not
+# published: the full-size promo art (the site uses the smaller copies in
+# images/) and the zip it ships in.
+exclude:
+  - Promo
+  - PolyBlockade_Promo
+  - Promo.zip
