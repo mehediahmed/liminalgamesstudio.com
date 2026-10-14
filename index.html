@@ -159,6 +159,42 @@
   .meter-steps li.is-on { border-top-color: var(--state); color: var(--world-fg); }
   .meter figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
 
+  /* Poly Blockade's upgrade path, in the same strip as the awareness meter:
+     three levels, then the one choice that ends a tower */
+  .path { margin: 2.25rem 0; max-width: 34rem; }
+  .path + .pitch { margin-top: 0; }
+  .path-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .path-steps li {
+    padding-top: 0.625rem;
+    border-top: 4px solid var(--world-fg);
+    color: var(--world-fg);
+    font-size: 0.875rem;
+    font-stretch: 112%;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .path figcaption { margin-top: 0.75rem; color: var(--world-muted); font-size: 0.9375rem; }
+  /* With the script, the bars start dark and light one level at a time as
+     the strip scrolls into view, the way a tower levels up. Without the
+     script, or with motion off, all four are lit from the start. */
+  .path-steps li:nth-child(2) { --step: 1; }
+  .path-steps li:nth-child(3) { --step: 2; }
+  .path-steps li:nth-child(4) { --step: 3; }
+  .path.is-armed .path-steps li {
+    border-top-color: var(--world-line);
+    color: var(--world-muted);
+    transition: color 0.3s ease, border-color 0.3s ease;
+    transition-delay: calc(var(--step, 0) * 0.4s);
+  }
+  .path.is-armed.is-lit .path-steps li { border-top-color: var(--world-fg); color: var(--world-fg); }
+
   /* Screenshots. Leave No Witnesses goes in the order you reach each place,
      from the street to the alley out back; Poly Blockade goes from daylight
      to dusk, so its last frame is nearly night when the night ridge cuts in.
@@ -307,6 +343,18 @@
       <div class="world-inner">
         <h3 id="pb-title"><span>Poly</span> <span>Blockade</span></h3>
         <p class="pitch">A low-poly tower defense game for iPhone, iPad and Android. It's coming soon, and it has no ads.</p>
+        <p class="pitch">Creeps walk the road to your castle gate. You build towers on the pads beside it, and where you put them decides who reaches the wall.</p>
+        <figure class="path">
+          <ol class="path-steps">
+            <li>Level I</li>
+            <li>Level II</li>
+            <li>Level III</li>
+            <li>Final</li>
+          </ol>
+          <figcaption>Every tower climbs three levels, then you choose one of two final upgrades. The Archer Tower ends as either Sharpshooter's Redoubt or Thornveil Volley.</figcaption>
+        </figure>
+        <p class="pitch">Tap a tower and its range shows as a ring on the road. Pay for an upgrade or one of its abilities before the next creep rounds the bend.</p>
+        <p class="pitch">The road changes as you go: a green meadow, a forest at dusk, snow, and a volcano of ash and dead white trees. A werewolf crosses a wooden bridge. A dragon breathes fire over the gate.</p>
 
         <div class="viewer">
           <ol class="viewer-frames" id="pb-frames" aria-label="Screenshots, from the meadow to the volcano">
@@ -524,6 +572,21 @@
       lastScrollY = window.scrollY;
     }, { passive: true });
     meter.querySelector('.meter-hint').hidden = false;
+
+    // ---- Upgrade path ----
+    // The bars light one level at a time the first time the strip is seen.
+    // With motion off, or no observer, they stay lit and nothing is armed.
+    var path = document.querySelector('.path');
+    if (path && window.IntersectionObserver &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      path.classList.add('is-armed');
+      var pathWatch = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        path.classList.add('is-lit');
+        pathWatch.disconnect();
+      }, { threshold: 0.6 });
+      pathWatch.observe(path);
+    }
 
     // ---- Screenshot viewers ----
     // Lines each game's screenshots up in one window. Swiping or scrolling it
